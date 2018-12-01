@@ -5,7 +5,7 @@ import time
 import dill
 from datetime import datetime
 from termcolor import colored
-from codesync.common import BASE_URL, gen_dict_to_list_dict
+from protosync.common import BASE_URL, gen_dict_to_list_dict
 
 
 def compute_dest_hashes(dst_root, structure):

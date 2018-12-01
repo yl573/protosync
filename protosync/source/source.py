@@ -5,7 +5,7 @@ import requests
 import time
 from termcolor import colored
 import uuid
-from codesync.common import BASE_URL, list_dict_to_gen_dict, gen_dict_to_list_dict
+from protosync.common import BASE_URL, list_dict_to_gen_dict, gen_dict_to_list_dict
 
 
 def get_src_structure(src_root):
@@ -81,7 +81,7 @@ def start_source_sync(src_root, pin):
     if len(pin) == 0:
         pin = uuid.uuid4().hex
     print('\n\tRun in remote repository:')
-    print('\t' + colored('codesync.py dest {}'.format(pin, src_root), 'yellow'))
+    print('\t' + colored('protosync.py dest {}'.format(pin, src_root), 'yellow'))
     while True:
         structure = get_src_structure(src_root)
         source_push_structure(pin, structure)
