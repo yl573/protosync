@@ -3,20 +3,17 @@ import dill
 import requests
 import time
 
-# BASE_URL = 'http://ec2-18-130-174-127.eu-west-2.compute.amazonaws.com'
-BASE_URL = 'http://0.0.0.0:5000'
+BASE_URL = 'http://ec2-18-130-174-127.eu-west-2.compute.amazonaws.com'
+# BASE_URL = 'http://0.0.0.0:5000'
 
 
 def gen_dict_to_list_dict(gen_dict):
-    # print(gen_dict)
     for key, val in gen_dict.items():
-        # print([x for x in val])
         gen_dict[key] = [x for x in val]
     return gen_dict
 
 
 def list_dict_to_gen_dict(list_dict):
-    # print(list_dict)
     for key, val in list_dict.items():
         list_dict[key] = (x for x in val)
     return list_dict
