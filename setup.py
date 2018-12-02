@@ -25,6 +25,6 @@ setuptools.setup(
         'dill==0.2.7.1',
         'termcolor==1.1.0',
         'pyrsync2==0.2.6',
-        'requests==2.18.4'
+        'requests==2.20.0'
     ]
 )
