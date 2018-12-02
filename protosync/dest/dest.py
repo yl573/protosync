@@ -18,8 +18,7 @@ def compute_dest_hashes(dst_root, structure):
                 f.write('')
 
         with open(file_path, 'rb') as f:
-            unpatched = open(file_path, 'rb')
-            hashes = pyrsync2.blockchecksums(unpatched)
+            hashes = pyrsync2.blockchecksums(f)
 
         structured_hashes[path] = hashes
     return structured_hashes
