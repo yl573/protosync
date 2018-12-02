@@ -20,8 +20,8 @@ def compute_source_deltas(src_root, structured_hashes):
     structured_deltas = {}
     for path, hashes in structured_hashes.items():
         file_path = os.path.join(src_root, path)
-        patchedfile = open(file_path, 'rb')
-        delta = pyrsync2.rsyncdelta(patchedfile, hashes)
+        with open(file_path, 'rb') as patchedfile:
+            delta = pyrsync2.rsyncdelta(patchedfile, hashes)
         structured_deltas[path] = delta
     return structured_deltas
 

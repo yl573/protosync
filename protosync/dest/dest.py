@@ -32,10 +32,10 @@ def update_dst(dst_root, structured_deltas):
             file_path = os.path.join(dst_root, path)
             time_str = datetime.now().strftime('%H:%M:%S')
             print('{}  File changed: {}'.format(time_str, file_path))
-            unpatched = open(file_path, 'rb')
-            unpatched.seek(0)
-            save_to = open(file_path, 'wb')
-            pyrsync2.patchstream(unpatched, save_to, delta)
+            with open(file_path, 'rb') as unpatched:
+                unpatched.seek(0)
+                with open(file_path, 'wb') as save_to:
+                    pyrsync2.patchstream(unpatched, save_to, delta)
 
 
 def dest_fetch_structure(pin):
