@@ -28,4 +28,13 @@ You'll see it print:
 Syncing directory to source
 ```
 
-And that's it! Just make changes in your local directory and see it automatically synced across to the remote directory. 
+And that's it! 
+
+Just make changes in your local directory and see it automatically synced across to the remote directory. 
+
+**Note:** you'll need to keep both terminals running for the sync to work.
+
+### Facts
+
+* Protosync uses your ```.gitignore``` file to automatically ignore unnecessary files.
+* If you're worried about network usage, Protosync generates about **2kb/s** of traffic.
