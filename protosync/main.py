@@ -12,10 +12,13 @@ def main():
 
     args = parser.parse_args()
 
-    if args.mode == 'source':
-        start_source_sync(args.dir, args.pin)
-    else:
-        start_dest_sync(args.dir, args.pin)
+    try:
+        if args.mode == 'source':
+            start_source_sync(args.dir, args.pin)
+        else:
+            start_dest_sync(args.dir, args.pin)
+    finally:
+        print('Protosync stopped')
 
 if __name__ == '__main__':
     main()

@@ -5,6 +5,10 @@ from termcolor import colored
 from protosync.common import *
 
 
+def time_str():
+    return datetime.now().strftime('%H:%M:%S')
+
+
 def compute_dest_hashes(dst_root, structure):
     structured_hashes = {}
     for path in structure:
@@ -15,23 +19,21 @@ def compute_dest_hashes(dst_root, structure):
             os.makedirs(dir_path)
         if not os.path.exists(file_path):
             with open(file_path, 'w') as f:
-                f.write('')
+                pass
+            print('{}  File Created: {}'.format(time_str(), file_path))
 
         with open(file_path, 'rb') as f:
             hashes = pyrsync2.blockchecksums(f)
-
-        structured_hashes[path] = hashes
+            structured_hashes[path] = [x for x in hashes]
     return structured_hashes
 
 
 def update_dst(dst_root, structured_deltas):
     structured_deltas = gen_dict_to_list_dict(structured_deltas)
     for path, delta in structured_deltas.items():
-
-        if delta != [0]:
+        if len(delta) > 0 and delta != [0]:
             file_path = os.path.join(dst_root, path)
-            time_str = datetime.now().strftime('%H:%M:%S')
-            print('{}  File changed: {}'.format(time_str, file_path))
+            print('{}  File Changed: {}'.format(time_str(), file_path))
             with open(file_path, 'rb') as unpatched:
                 unpatched.seek(0)
                 with open(file_path, 'wb') as save_to:
@@ -55,11 +57,11 @@ def dest_fetch_deltas(pin):
 
 
 def start_dest_sync(dest_root, pin):
-    print(colored('Syncing directory to source', 'yellow'))
+    print('\nSyncing directory to source')
     while True:
         structure = dest_fetch_structure(pin)
         hashes = compute_dest_hashes(dest_root, structure)
         dest_push_hashes(pin, hashes)
         deltas = dest_fetch_deltas(pin)
         update_dst(dest_root, deltas)
-
+        time.sleep(0.5)
