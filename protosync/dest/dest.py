@@ -14,11 +14,12 @@ def compute_dest_hashes(dst_root, structure):
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
         if not os.path.exists(file_path):
-            with open(file_path, "w") as f:
+            with open(file_path, 'w') as f:
                 f.write('')
 
-        unpatched = open(file_path, 'rb')
-        hashes = pyrsync2.blockchecksums(unpatched)
+        with open(file_path, 'rb') as f:
+            unpatched = open(file_path, 'rb')
+            hashes = pyrsync2.blockchecksums(unpatched)
 
         structured_hashes[path] = hashes
     return structured_hashes
