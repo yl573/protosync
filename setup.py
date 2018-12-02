@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="protosync",
-    version="0.0.1",
+    version="0.0.2",
     author="Edward Liu",
     author_email="edwardliu573@gmail.com",
     description="Sync code with a remote server in real time",
@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/yl573/protosync",
     entry_points={
-        'console_scripts': ['protoprotosync=protoprotosync:main'],
+        'console_scripts': ['protosync=protosync:main'],
     },
     packages=setuptools.find_packages(),
     classifiers=[

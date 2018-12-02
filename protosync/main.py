@@ -17,3 +17,6 @@ def main():
     else:
         start_dest_sync(args.dir, args.pin)
 
+if __name__ == '__main__':
+    main()
+
