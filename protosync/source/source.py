@@ -1,7 +1,6 @@
 import pyrsync2
 import os
 from termcolor import colored
-import uuid
 from protosync.common import list_dict_to_gen_dict, save_temp_and_push, fetch_temp_and_load, gen_dict_to_list_dict
 import fnmatch
 import time
@@ -59,6 +58,10 @@ def source_push_structure(pin, structure):
 
 def source_fetch_hashes(pin):
     hashes = fetch_temp_and_load('/source/fetch/hashes', pin)
+    if hashes is None:
+        print('Cannot find the remote server')
+        print('Make sure you are running protosync dest on the remote server :-)')
+        exit()
     hashes = list_dict_to_gen_dict(hashes)
     return hashes
 
@@ -68,14 +71,9 @@ def source_push_deltas(pin, deltas):
 
 
 def start_source_sync(src_root, pin):
-    if len(pin) == 0:
-        pin = uuid.uuid4().hex
-    print('\nRun in remote repository:')
-    print('protosync dest {}'.format(pin, src_root))
-    while True:
-        structure = get_src_structure(src_root)
-        source_push_structure(pin, structure)
-        hashes = source_fetch_hashes(pin)
-        deltas = compute_source_deltas(src_root, hashes)
-        source_push_deltas(pin, deltas)
-        time.sleep(0.5)
+    structure = get_src_structure(src_root)
+    source_push_structure(pin, structure)
+    hashes = source_fetch_hashes(pin)
+    deltas = compute_source_deltas(src_root, hashes)
+    source_push_deltas(pin, deltas)
+    print('Code synced to remote directory')

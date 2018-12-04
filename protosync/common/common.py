@@ -4,6 +4,8 @@ import requests
 import time
 
 BASE_URL = 'http://ec2-18-130-174-127.eu-west-2.compute.amazonaws.com'
+FETCH_TIMEOUT = 3
+
 # BASE_URL = 'http://0.0.0.0:5000'
 
 
@@ -29,14 +31,17 @@ def save_temp_and_push(data, endpoint, pin):
         requests.post(url, files=files, data=data)
 
 
-def fetch_temp_and_load(endpoint, pin):
+def fetch_temp_and_load(endpoint, pin, timeout=False):
     has_response = False
+    t0 = time.time()
     while not has_response:
         url = BASE_URL + endpoint
         data = dict(pin=str(pin))
         res = requests.post(url, data=data)
         has_response = res.status_code == 200
         time.sleep(0.1)
+        if timeout and time.time() - t0 > FETCH_TIMEOUT:
+            return None
 
     with tempfile.TemporaryFile() as fp:
 
