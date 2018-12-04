@@ -56,6 +56,5 @@ def fetch_temp_and_load(endpoint, pin, timeout=False):
                 data = dill.load(fp)
                 can_read = True
             except Exception as e:
-                # print(e)
                 can_read = False
     return data
