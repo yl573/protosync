@@ -57,10 +57,10 @@ def source_push_structure(pin, structure):
 
 
 def source_fetch_hashes(pin):
-    hashes = fetch_temp_and_load('/source/fetch/hashes', pin)
+    hashes = fetch_temp_and_load('/source/fetch/hashes', pin, timeout=True)
     if hashes is None:
-        print('Cannot find the remote server')
-        print('Make sure you are running protosync dest on the remote server :-)')
+        print('\nOops, Protosync can\'t find the remote server')
+        print('Make sure you are running "protosync dest" on the remote server\n')
         exit()
     hashes = list_dict_to_gen_dict(hashes)
     return hashes
