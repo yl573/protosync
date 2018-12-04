@@ -8,10 +8,12 @@ import time
 
 def get_ignore_filters(src_root):
     ignore_file = os.path.join(src_root, '.gitignore')
-    if os.path.isfile(ignore_file):
-        with open(ignore_file, 'r') as f:
-            text = f.read()
-        ignore_filters = text.split('\n')
+    if not os.path.isfile(ignore_file):
+        return []
+
+    with open(ignore_file, 'r') as f:
+        text = f.read()
+    ignore_filters = text.split('\n')
     for i, filter in enumerate(ignore_filters):
         if len(filter) > 0 and filter[-1] == '/':
             ignore_filters[i] = filter + '*'

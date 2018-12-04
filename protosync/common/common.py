@@ -6,7 +6,10 @@ import time
 BASE_URL = 'http://ec2-18-130-174-127.eu-west-2.compute.amazonaws.com'
 FETCH_TIMEOUT = 3
 
-# BASE_URL = 'http://0.0.0.0:5000'
+
+def set_debug():
+    global BASE_URL
+    BASE_URL = 'http://0.0.0.0:5000'
 
 
 def gen_dict_to_list_dict(gen_dict):
@@ -53,6 +56,6 @@ def fetch_temp_and_load(endpoint, pin, timeout=False):
                 data = dill.load(fp)
                 can_read = True
             except Exception as e:
-                print(e)
+                # print(e)
                 can_read = False
     return data
