@@ -38,4 +38,3 @@ Just enter the same command wheneve you want to sync.
 ### Facts
 
 * Protosync uses your ```.gitignore``` file to automatically ignore unnecessary files.
-* If you're worried about network usage, Protosync generates about **2kb/s** of traffic.
