@@ -1,8 +1,8 @@
 # Protosync
 
-Protosync solves the problem of seamlessly syncing experimental code between your local development repo and remote server. 
+Protosync syncs code seamlessly between your local development repo and a remote server. 
 
-No more need for repeated commits or rsyncs just to get code across.
+No more repeated git commits or long rsync commands just to test code out on the server.
 
 
 ### Install
@@ -13,26 +13,27 @@ pip install protosync
 
 ### Quick Start
 
-In your **local source** directory, enter:
+In your **remote** directory, open a **new terminal** and enter:
 ```
-protosync source
+protosync dest
 ```
 Protosync will then print a command like this:
 ```
-protosync dest 7dd2dd14b3734321a69a5492d69b4c2b
+protosync source 85736c2686be4218ba789a50e2425564
 ```
-Run this command in your **remote destination** directory.
+Run this command in your **local** source directory.
  
 You'll see it print:
 ```
-Syncing directory to source
+Code synced to remote directory
 ```
 
 And that's it! 
 
-Just make changes in your local directory and see it automatically synced across to the remote directory. 
+You local code has now been synced to the remote server.  
+Just enter the same command wheneve you want to sync.
 
-**Note:** you'll need to keep both terminals running for the sync to work.
+**Note:** you'll need to keep the remote terminal running for the sync to work.
 
 ### Facts
 

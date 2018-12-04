@@ -2,6 +2,7 @@ import pyrsync2
 import os
 from datetime import datetime
 from termcolor import colored
+import uuid
 from protosync.common import *
 
 
@@ -57,7 +58,11 @@ def dest_fetch_deltas(pin):
 
 
 def start_dest_sync(dest_root, pin):
-    print('\nSyncing directory to source')
+    if len(pin) == 0:
+        pin = uuid.uuid4().hex
+    print('Protosync started')
+    print('To sync, run in local directory:')
+    print('\nprotosync source {}'.format(pin))
     while True:
         structure = dest_fetch_structure(pin)
         hashes = compute_dest_hashes(dest_root, structure)
