@@ -49,7 +49,6 @@ def wait_pin_data(pin, endpoint):
         res = requests.post(url, data=data)
         if res.status_code == 200:
             return True
-        print(res.status_code)
         time.sleep(0.2)
     return False
 

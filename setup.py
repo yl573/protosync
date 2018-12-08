@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="protosync",
-    version="0.0.4.1",
+    version="0.0.4.2",
     author="Edward Liu",
     author_email="edwardliu573@gmail.com",
     description="Sync code with a remote server in real time",
@@ -23,7 +23,6 @@ setuptools.setup(
     ],
     install_requires=[
         'dill==0.2.7.1',
-        'termcolor==1.1.0',
         'pyrsync2==0.2.6',
         'requests==2.20.0'
     ]
