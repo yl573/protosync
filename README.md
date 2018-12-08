@@ -38,4 +38,4 @@ Just enter the same command wheneve you want to sync.
 ### Facts
 
 * Protosync uses your ```.gitignore``` file to automatically ignore unnecessary files.
-* Protosync intentionally ignores files larger than 10Mb to prevent syncing of unwanted binaries.
+* Protosync ignores files larger than 10Mb to prevent syncing of unwanted binaries.
