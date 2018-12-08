@@ -1,14 +1,12 @@
 import pyrsync2
 import os
 from datetime import datetime
-from termcolor import colored
 import uuid
 from protosync.common import *
 
 
 def time_str():
     return datetime.now().strftime('%H:%M:%S')
-
 
 def compute_dest_hashes(dst_root, structure):
     structured_hashes = {}
@@ -57,6 +55,10 @@ def dest_fetch_deltas(pin):
     return deltas
 
 
+def dest_send_acknowledge(pin):
+    send_pin_data(pin, '/dest/send/acknowledge')
+
+
 def start_dest_sync(dest_root, pin):
     if len(pin) == 0:
         pin = uuid.uuid4().hex
@@ -65,6 +67,7 @@ def start_dest_sync(dest_root, pin):
     print('\nprotosync source {}'.format(pin))
     while True:
         structure = dest_fetch_structure(pin)
+        dest_send_acknowledge(pin)
         hashes = compute_dest_hashes(dest_root, structure)
         dest_push_hashes(pin, hashes)
         deltas = dest_fetch_deltas(pin)

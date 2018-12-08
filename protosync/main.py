@@ -1,4 +1,5 @@
 import argparse
+import os
 from protosync.dest import start_dest_sync
 from protosync.source import start_source_sync
 from protosync.common import set_debug
@@ -17,6 +18,10 @@ def main():
     if args.debug:
         print('running in debug mode')
         set_debug()
+
+    args.dir = os.path.expanduser(args.dir)
+    if not os.path.isdir(args.dir):
+        print('Error: directory {} does not exist'.format(args.dir))
 
     if args.mode == 'source':
         start_source_sync(args.dir, args.pin)
