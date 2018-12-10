@@ -2,9 +2,11 @@ import tempfile
 import dill
 import requests
 import time
+from cryptography.fernet import Fernet
 
 BASE_URL = 'http://ec2-18-130-174-127.eu-west-2.compute.amazonaws.com'
 FETCH_TIMEOUT = 3
+TEST_PIN = 'm0X1a-km0C6mCzWkl56xO0-hUQvYrhL0q5I5lK5qZgU='
 
 
 def time_function(name):
@@ -54,8 +56,13 @@ def wait_pin_data(pin, endpoint):
 
 
 def save_temp_and_push(data, endpoint, pin):
+    data_str = dill.dumps(data)
+
+    cipher = Fernet(pin)
+    encrypted_data = cipher.encrypt(data_str)
+
     with tempfile.TemporaryFile() as fp:
-        dill.dump(data, fp)
+        fp.write(encrypted_data)
         fp.seek(0)
         files = {'file': fp}
         url = BASE_URL + endpoint
@@ -71,15 +78,10 @@ def fetch_temp_and_load(endpoint, pin):
         res = requests.post(url, data=data)
         has_response = res.status_code == 200
 
+    cipher = Fernet(pin)
     with tempfile.TemporaryFile() as fp:
+        fp.write(cipher.decrypt(res.content))
+        fp.seek(0)
+        data = dill.load(fp)
 
-        fp.write(res.content)
-        can_read = False
-        while not can_read:
-            try:
-                fp.seek(0)
-                data = dill.load(fp)
-                can_read = True
-            except Exception as e:
-                can_read = False
     return data

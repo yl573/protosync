@@ -24,11 +24,10 @@ def main():
         print('Error: directory {} does not exist'.format(args.dir))
 
     if args.mode == 'source':
-        start_source_sync(args.dir, args.pin)
+        start_source_sync(args.dir, args.pin, debug=args.debug)
     else:
-        start_dest_sync(args.dir, args.pin)
+        start_dest_sync(args.dir, debug=args.debug)
 
 
 if __name__ == '__main__':
     main()
-

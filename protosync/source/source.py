@@ -96,7 +96,9 @@ def source_check_acknowledge(pin):
         exit()
 
 
-def start_source_sync(src_root, pin):
+def start_source_sync(src_root, pin, debug=False):
+    if debug:
+        pin = TEST_PIN
     structure = get_src_structure(src_root)
     source_push_structure(pin, structure)
     source_check_acknowledge(pin)

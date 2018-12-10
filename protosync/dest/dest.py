@@ -1,7 +1,6 @@
 import pyrsync2
 import os
 from datetime import datetime
-import uuid
 from protosync.common import *
 
 
@@ -59,9 +58,13 @@ def dest_send_acknowledge(pin):
     send_pin_data(pin, '/dest/send/acknowledge')
 
 
-def start_dest_sync(dest_root, pin):
-    if len(pin) == 0:
-        pin = uuid.uuid4().hex
+def start_dest_sync(dest_root, debug=False):
+    if debug:
+        pin = TEST_PIN
+    else:
+        pin = Fernet.generate_key()
+        pin = pin.decode()
+
     print('Protosync started')
     print('To sync, run in local directory:')
     print('\nprotosync source {}'.format(pin))
