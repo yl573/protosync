@@ -77,8 +77,8 @@ def source_push_deltas(pin, deltas):
     save_temp_and_push(deltas, '/source/push/deltas', pin)
 
 
-def source_check_acknowledge(pin):
-    acknowledged = wait_pin_data(pin, '/source/wait/acknowledge')
+def source_check_acknowledge(pin, timeout):
+    acknowledged = wait_pin_data(pin, '/source/wait/acknowledge', timeout)
     if not acknowledged:
         print('\nOops, Protosync can\'t find the remote server')
         print('Try re-running "protosync dest" on the remote server\n')
@@ -100,8 +100,9 @@ def start_source_sync(src_root, pin, debug=False):
         pin = GLOBALS.TEST_PIN
     structure = get_src_structure(src_root)
     source_push_structure(pin, structure)
-    source_check_acknowledge(pin)
+    source_check_acknowledge(pin, GLOBALS.FETCH_TIMEOUT)
     hashes = source_fetch_hashes(pin)
     deltas = compute_source_deltas(src_root, hashes)
     source_push_deltas(pin, deltas)
+    source_check_acknowledge(pin, GLOBALS.UPDATE_TIMEOUT)
     print_report(deltas)

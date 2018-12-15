@@ -9,6 +9,7 @@ GLOBALS = AttrDict(
     DEBUG=False,
     BASE_URL='http://ec2-18-130-174-127.eu-west-2.compute.amazonaws.com',
     FETCH_TIMEOUT=3,
+    UPDATE_TIMEOUT=10,
     TEST_PIN='m0X1a-km0C6mCzWkl56xO0-hUQvYrhL0q5I5lK5qZgU=',
     MAX_FILE_SIZE_MB=5,
     WARNING_SIZE_MB=3,
@@ -34,7 +35,7 @@ def time_function(name):
 
 def set_debug():
     GLOBALS.DEBUG = True
-    GLOBALS.BASE_URL = 'http://0.0.0.0:5000'
+    # GLOBALS.BASE_URL = 'http://0.0.0.0:5000'
 
 
 def gen_dict_to_list_dict(gen_dict):
@@ -55,9 +56,9 @@ def send_pin_data(pin, endpoint):
     requests.post(url, data=data)
 
 
-def wait_pin_data(pin, endpoint):
+def wait_pin_data(pin, endpoint, timeout):
     t0 = time.time()
-    while time.time() - t0 < GLOBALS.FETCH_TIMEOUT:
+    while time.time() - t0 < timeout:
         url = GLOBALS.BASE_URL + endpoint
         data = dict(pin=str(pin))
         res = requests.post(url, data=data)
@@ -78,10 +79,8 @@ def save_temp_and_push(data, endpoint, pin):
         fp.seek(0)
         files = {'file': fp}
         url = GLOBALS.BASE_URL + endpoint
-        data = dict(pin=pin)
-        requests.post(url, files=files, data=data)
-
-        fp.seek(0)
+        pin_data = dict(pin=pin)
+        requests.post(url, files=files, data=pin_data)
 
 
 def fetch_temp_and_load(endpoint, pin):

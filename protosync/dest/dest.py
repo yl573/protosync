@@ -76,4 +76,5 @@ def start_dest_sync(dest_root, debug=False):
         dest_push_hashes(pin, hashes)
         deltas = dest_fetch_deltas(pin)
         update_dst(dest_root, deltas)
+        dest_send_acknowledge(pin)
         time.sleep(0.5)
