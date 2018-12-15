@@ -20,7 +20,6 @@ def compute_dest_hashes(dst_root, structure):
         if not os.path.exists(file_path):
             with open(file_path, 'w') as f:
                 pass
-            print('{}  File Created: {}'.format(time_str(), file_path))
 
         with open(file_path, 'rb') as f:
             hashes = pyrsync2.blockchecksums(f)
