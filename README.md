@@ -19,24 +19,19 @@ protosync dest
 ```
 Protosync will then print a command like this:
 ```
-protosync source 85736c2686be4218ba789a50e2425564
+protosync source m0X1a-km0C6mCzWkl56xO0-hUQvYrhL0q5I5lK5qZgU=
 ```
 Run this command in your **local** source directory.
- 
-You'll see it print:
-```
-Code synced to remote directory
-```
 
 And that's it! 
 
-You local code has now been synced to the remote server.  
-Just enter the same command wheneve you want to sync.
+You local code will now be synced to the remote server.  
+Just enter the same command whenever you want to sync again.
 
 **Note:** you'll need to keep the remote terminal running for the sync to work.
 
 ### Facts
 
-* Protosync uses your ```.gitignore``` file to automatically ignore unnecessary files.
-* Protosync ignores files larger than **10Mb** to prevent syncing of unwanted binaries.
+* Protosync uses your ```.gitignore``` to automatically ignore unnecessary files.
+* Protosync ignores files larger than **5Mb** to prevent syncing of unwanted binaries.
 * Protosync uses **end-to-end encryption** when syncing your files. The server **cannot** decrypt your data.

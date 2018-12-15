@@ -1,60 +1,48 @@
 import pyrsync2
 import os
 from protosync.common import *
-import fnmatch
+from gitignore_parser import parse_gitignore
+from queue import Queue
 
-MAX_FILE_SIZE_MB = 10
-WARNING_SIZE_MB = 5
-
-
-def get_ignore_filters(src_root):
-    ignore_file = os.path.join(src_root, '.gitignore')
-    if not os.path.isfile(ignore_file):
-        return []
-
-    with open(ignore_file, 'r') as f:
-        text = f.read()
-    ignore_filters = text.split('\n')
-    for i, filter in enumerate(ignore_filters):
-        if len(filter) > 0 and filter[-1] == '/':
-            ignore_filters[i] = filter + '*'
-    ignore_filters.append('.git/*')
-    return ignore_filters
-
-
-def filter_gitignore(tracked_files, src_root):
-    ignore_filters = get_ignore_filters(src_root)
-    for ignore in ignore_filters:
-        tracked_files = [f for f in tracked_files if not fnmatch.fnmatch(f, ignore)]
-    return tracked_files
-
-
-def filter_large_files(tracked_files, src_root):
-    filtered_files = []
-    for sub_path in tracked_files:
-        full_path = os.path.join(src_root, sub_path)
-        file_size = os.path.getsize(full_path) / (1024 ** 2)
-        if file_size > MAX_FILE_SIZE_MB:
-            print('Ignoring file: {}, file exceeding {} Mb'.format(sub_path, MAX_FILE_SIZE_MB))
-        else:
-            filtered_files.append(sub_path)
-    return filtered_files
+MAX_FILE_SIZE_MB = 5
+WARNING_SIZE_MB = 3
 
 
 def get_src_structure(src_root):
+    ignore_file = os.path.join(src_root, '.gitignore')
+    if not os.path.isfile(ignore_file):
+        ignore = None
+    else:
+        ignore = parse_gitignore(ignore_file)
+
     structure = {}
-    for path, subdirs, files in os.walk(src_root):
-        for name in files:
-            _, file_extension = os.path.splitext(name)
-            file_path = os.path.join(path, name)
-            sub_path = os.path.relpath(file_path, src_root)
-            structure[sub_path] = 0
+    directories = Queue()
+    directories.put(src_root)
+    while not directories.empty():
+        dir_path = directories.get()
+        items = os.listdir(dir_path)
+        for item in items:
+            full_path = os.path.join(dir_path, item)
+            rel_path = os.path.relpath(full_path, src_root)
 
-    tracked_files = list(structure.keys())
-    tracked_files = filter_gitignore(tracked_files, src_root)
-    tracked_files = filter_large_files(tracked_files, src_root)
+            # check if item in .gitignore
+            if ignore and ignore(full_path):
+                continue
 
-    structure = {file: structure[file] for file in tracked_files}
+            # check if item is directory
+            if os.path.isdir(full_path):
+                directories.put(full_path)
+                continue
+
+            # check if file is too big
+            file_size = os.path.getsize(full_path) / (1024 ** 2)
+            if file_size > MAX_FILE_SIZE_MB:
+                print('Ignoring file: {}, file exceeding {} Mb'.format(rel_path, MAX_FILE_SIZE_MB))
+                continue
+
+            else:
+                structure[rel_path] = 0
+
     return structure
 
 
@@ -92,8 +80,17 @@ def source_check_acknowledge(pin):
     acknowledged = wait_pin_data(pin, '/source/wait/acknowledge')
     if not acknowledged:
         print('\nOops, Protosync can\'t find the remote server')
-        print('Make sure you are running "protosync dest" on the remote server\n')
+        print('Try re-running "protosync dest" on the remote server\n')
         exit()
+
+
+def print_report(deltas):
+    count = 0
+    for file, delta in deltas.items():
+        if len(delta) > 0 and delta != [0]:
+            print('File synced: {}'.format(file))
+            count += 1
+    print('Total synced: {} files'.format(count))
 
 
 def start_source_sync(src_root, pin, debug=False):
@@ -105,4 +102,4 @@ def start_source_sync(src_root, pin, debug=False):
     hashes = source_fetch_hashes(pin)
     deltas = compute_source_deltas(src_root, hashes)
     source_push_deltas(pin, deltas)
-    print('Code synced to remote directory')
+    print_report(deltas)

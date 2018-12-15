@@ -7,6 +7,7 @@ from protosync.common import *
 def time_str():
     return datetime.now().strftime('%H:%M:%S')
 
+
 def compute_dest_hashes(dst_root, structure):
     structured_hashes = {}
     for path in structure:
@@ -31,7 +32,6 @@ def update_dst(dst_root, structured_deltas):
     for path, delta in structured_deltas.items():
         if len(delta) > 0 and delta != [0]:
             file_path = os.path.join(dst_root, path)
-            print('{}  File Changed: {}'.format(time_str(), file_path))
             with open(file_path, 'rb') as unpatched:
                 unpatched.seek(0)
                 with open(file_path, 'wb') as save_to:
