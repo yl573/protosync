@@ -23,10 +23,12 @@ def main():
     if not os.path.isdir(args.dir):
         print('Error: directory {} does not exist'.format(args.dir))
 
+    root_path = os.path.abspath(args.dir)
+
     if args.mode == 'source':
-        start_source_sync(args.dir, args.pin, debug=args.debug)
+        start_source_sync(root_path, args.pin, debug=args.debug)
     else:
-        start_dest_sync(args.dir, debug=args.debug)
+        start_dest_sync(root_path, debug=args.debug)
 
 
 if __name__ == '__main__':
