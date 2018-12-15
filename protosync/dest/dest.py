@@ -8,6 +8,7 @@ def time_str():
     return datetime.now().strftime('%H:%M:%S')
 
 
+@time_function('hashes')
 def compute_dest_hashes(dst_root, structure):
     structured_hashes = {}
     for path in structure:
@@ -27,6 +28,7 @@ def compute_dest_hashes(dst_root, structure):
     return structured_hashes
 
 
+@time_function('update')
 def update_dst(dst_root, structured_deltas):
     structured_deltas = gen_dict_to_list_dict(structured_deltas)
     for path, delta in structured_deltas.items():
@@ -60,7 +62,7 @@ def dest_send_acknowledge(pin):
 
 def start_dest_sync(dest_root, debug=False):
     if debug:
-        pin = TEST_PIN
+        pin = GLOBALS.TEST_PIN
     else:
         pin = Fernet.generate_key()
         pin = pin.decode()

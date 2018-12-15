@@ -4,10 +4,8 @@ from protosync.common import *
 from gitignore_parser import parse_gitignore
 from queue import Queue
 
-MAX_FILE_SIZE_MB = 5
-WARNING_SIZE_MB = 3
 
-
+@time_function('structure')
 def get_src_structure(src_root):
     ignore_file = os.path.join(src_root, '.gitignore')
     if not os.path.isfile(ignore_file):
@@ -25,8 +23,8 @@ def get_src_structure(src_root):
             full_path = os.path.join(dir_path, item)
             rel_path = os.path.relpath(full_path, src_root)
 
-            # check if item in .gitignore
-            if ignore and ignore(full_path):
+            # check if item in .gitignore, or is .git/
+            if (ignore and ignore(full_path)) or item == '.git':
                 continue
 
             # check if item is directory
@@ -36,8 +34,8 @@ def get_src_structure(src_root):
 
             # check if file is too big
             file_size = os.path.getsize(full_path) / (1024 ** 2)
-            if file_size > MAX_FILE_SIZE_MB:
-                print('Ignoring file: {}, file exceeding {} Mb'.format(rel_path, MAX_FILE_SIZE_MB))
+            if file_size > GLOBALS.MAX_FILE_SIZE_MB:
+                print('Ignoring file: {}, file exceeding {} Mb'.format(rel_path, GLOBALS.MAX_FILE_SIZE_MB))
                 continue
 
             else:
@@ -46,13 +44,14 @@ def get_src_structure(src_root):
     return structure
 
 
+@time_function('delta')
 def compute_source_deltas(src_root, structured_hashes):
     structured_deltas = {}
     for path, hashes in structured_hashes.items():
         file_path = os.path.join(src_root, path)
         try:
             size = os.path.getsize(file_path) / (1024 ** 2)
-            if size > WARNING_SIZE_MB:
+            if size > GLOBALS.WARNING_SIZE_MB:
                 print('Large file: {} is {:.2f} Mb, this might take a while'.format(path, size))
             with open(file_path, 'rb') as patchedfile:
                 delta = pyrsync2.rsyncdelta(patchedfile, hashes)
@@ -65,14 +64,16 @@ def compute_source_deltas(src_root, structured_hashes):
 def source_push_structure(pin, structure):
     save_temp_and_push(structure, '/source/push/structure', pin)
 
-
+@time_function('fetch hashes')
 def source_fetch_hashes(pin):
+    print('Fetching data from remote...')
     hashes = fetch_temp_and_load('/source/fetch/hashes', pin)
     hashes = list_dict_to_gen_dict(hashes)
     return hashes
 
-
+@time_function('push delta')
 def source_push_deltas(pin, deltas):
+    print('Pushing local changes...')
     save_temp_and_push(deltas, '/source/push/deltas', pin)
 
 
@@ -93,9 +94,10 @@ def print_report(deltas):
     print('Total synced: {} files'.format(count))
 
 
+@time_function('source_all')
 def start_source_sync(src_root, pin, debug=False):
     if debug:
-        pin = TEST_PIN
+        pin = GLOBALS.TEST_PIN
     structure = get_src_structure(src_root)
     source_push_structure(pin, structure)
     source_check_acknowledge(pin)
