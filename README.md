@@ -26,6 +26,7 @@ Run this command in your **local** source directory.
 And that's it! 
 
 You local code will now be synced to the remote server.  
+
 Just enter the same command whenever you want to sync again.
 
 **Note:** you'll need to keep the remote terminal running for the sync to work.
