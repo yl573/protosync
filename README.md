@@ -35,4 +35,4 @@ Just enter the same command whenever you want to sync again.
 
 * Protosync uses your ```.gitignore``` to automatically ignore unnecessary files.
 * Protosync ignores files larger than **5Mb** to prevent syncing of unwanted binaries.
-* Protosync uses **end-to-end encryption** when syncing your files. The server **cannot** decrypt your data.
+* Protosync uses **end-to-end encryption** when syncing your files.
