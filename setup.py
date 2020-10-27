@@ -25,7 +25,7 @@ setuptools.setup(
         'dill==0.2.7.1',
         'pyrsync2==0.2.6',
         'requests==2.20.0',
-        'cryptography==2.4.2',
+        'cryptography==3.2',
         'gitignore-parser==0.0.3',
         'attrdict==2.0.0'
     ]
